@@ -75,6 +75,10 @@ jobs:
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
+    parameters:
+      ENVIRONMENT_NAME:
+        type: string
+        default: ${ENVIRONMENT_NAME}
     steps:
       - checkout
       - run:
