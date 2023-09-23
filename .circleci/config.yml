@@ -249,13 +249,7 @@ workflows:
       - upload-docker:
           requires:
             - build
-          filters:
-            branches:
-              only: [ main ]
       - deploy-infrastructure:
-          filters:
-            branches:
-              only: [ main ]
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
