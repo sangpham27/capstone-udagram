@@ -16,6 +16,16 @@ commands:
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-cluster"
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup"
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-toggle" 
+
+  install_awscli:
+    description: Install AWS cli
+    steps:
+      - run:
+          name: Install AWS cli
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
   
   install_ansible:
     description: Install Ansible
@@ -90,6 +100,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - install_awscli
       - run:
           name: Install dependencies
           command: yum install -y tar gzip            
@@ -150,6 +161,8 @@ jobs:
           paths:
             - inventory.txt
             - checkIfDeployed.txt
+      
+      - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -222,6 +235,8 @@ jobs:
           root: ~/
           paths:
             - elb_dns.txt
+      
+      - destroy-environment
 
   deploy-docker:
     docker:
@@ -241,6 +256,8 @@ jobs:
             cd ansible
             ansible-playbook -i ~/inventory.txt deploy-app.yml -vvv
           no_output_timeout: 2m
+      
+      - destroy-environment
 
 workflows:
   default: 
