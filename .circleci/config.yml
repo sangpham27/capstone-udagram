@@ -159,7 +159,7 @@ jobs:
       - install_ansible
       - add_ssh_keys:
           fingerprints:
-            - "48:4f:3e:61:65:78:6d:67:cb:16:0e:38:ad:a9:ab:37:0d:98:c1:c2"
+            - "39:36:17:72:a0:36:0d:5e:e2:29:2b:6b:ed:43:51:ec"
       - attach_workspace:
           at: ~/    
       - run:
@@ -183,7 +183,7 @@ jobs:
       - install_ansible 
       - add_ssh_keys:
           fingerprints:
-            - "48:4f:3e:61:65:78:6d:67:cb:16:0e:38:ad:a9:ab:37:0d:98:c1:c2"
+            - "39:36:17:72:a0:36:0d:5e:e2:29:2b:6b:ed:43:51:ec"
       - attach_workspace:
           at: ~/                      
       - run:
@@ -231,7 +231,7 @@ jobs:
       - install_ansible
       - add_ssh_keys:
           fingerprints: 
-            - "48:4f:3e:61:65:78:6d:67:cb:16:0e:38:ad:a9:ab:37:0d:98:c1:c2"
+            - "39:36:17:72:a0:36:0d:5e:e2:29:2b:6b:ed:43:51:ec"
       - attach_workspace:
           at: ~/      
       - run:
