@@ -64,10 +64,6 @@ jobs:
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
-    parameters:
-      ENVIRONMENT_NAME:
-        type: string
-        default: ${ENVIRONMENT_NAME}
     steps:
       - checkout
       - run:
@@ -76,12 +72,11 @@ jobs:
       - run:
           name: Ensure EKS network exists
           command: |
-            echo "${ENVIRONMENT_NAME}-eks-network"
             aws cloudformation deploy \
               --template-file cloudformation/network.yml \
               --tags project=${ENVIRONMENT_NAME}-project \
               --stack-name "${ENVIRONMENT_NAME}-eks-network" \
-              --region us-east-1 \
+              --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/network-parameter.json
       - run:
           name: Ensure EKS Cluster exists
@@ -90,7 +85,7 @@ jobs:
               --template-file cloudformation/cluster.yml \
               --tags project=${ENVIRONMENT_NAME}-project \
               --stack-name "${ENVIRONMENT_NAME}-eks-cluster" \
-              --region us-east-1 \
+              --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/cluster-parameter.json \
               --capabilities CAPABILITY_NAMED_IAM
           no_output_timeout: 15m
@@ -101,7 +96,7 @@ jobs:
               --template-file cloudformation/nodegroup.yml \
               --tags project=${ENVIRONMENT_NAME}-project \
               --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup" \
-              --region us-east-1 \
+              --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/nodegroup-parameter.json \
               --capabilities CAPABILITY_NAMED_IAM
       - run:
@@ -111,7 +106,7 @@ jobs:
               --template-file cloudformation/toggle.yml \
               --tags project=${ENVIRONMENT_NAME}-project \
               --stack-name "${ENVIRONMENT_NAME}-eks-toggle" \
-              --region us-east-1 \
+              --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/toggle-parameter.json \
               --output text >> ~/checkIfDeployed.txt
             cat ~/checkIfDeployed.txt
@@ -120,7 +115,7 @@ jobs:
           command: |
             echo [toggle] > ~/inventory.txt
             aws ec2 describe-instances \
-              --region us-east-1 \
+              --region ${AWS_DEFAULT_REGION} \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Name,Values=capstone-project-toggle*" \
               --output text >> ~/inventory.txt
