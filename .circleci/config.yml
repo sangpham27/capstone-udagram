@@ -16,17 +16,6 @@ commands:
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-cluster"
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup"
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-toggle" 
-
-  install_awscli:
-    description: Install AWS cli
-    steps:
-      - run:
-          name: Install AWS cli
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            sudo apt-get install unzip
-            unzip awscliv2.zip
-            sudo ./aws/install
   
   install_ansible:
     description: Install Ansible
@@ -87,6 +76,7 @@ jobs:
       - run:
           name: Ensure EKS network exists
           command: |
+            echo "${ENVIRONMENT_NAME}-eks-network"
             aws cloudformation deploy \
               --template-file cloudformation/network.yml \
               --tags project=${ENVIRONMENT_NAME}-project \
