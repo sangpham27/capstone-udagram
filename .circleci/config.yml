@@ -240,9 +240,7 @@ workflows:
   default: 
     jobs:
       - build
-      - deploy-infrastructure:
-          requires:
-            - upload-docker
+      - deploy-infrastructure
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
