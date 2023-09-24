@@ -4,11 +4,11 @@
   gather_facts: false
   become: yes
   vars:
-    ENVIRONMENT_NAME: capstone-project
+    ENVIRONMENT_NAME: capstone-udagram
     CIRCLE_WORKFLOW_ID: "{{ lookup('env', 'CIRCLE_WORKFLOW_ID') }}"
   tasks:
     - name: Update the deployment to run the latest Build
-      shell: "./bin/kubectl set image deployments/{{ ENVIRONMENT_NAME }}-deployment {{ ENVIRONMENT_NAME }}-app=emb1605272/{{ ENVIRONMENT_NAME }}:{{ CIRCLE_WORKFLOW_ID }}"
+      shell: "./bin/kubectl set image deployments/{{ ENVIRONMENT_NAME }}-deployment {{ ENVIRONMENT_NAME }}-app=sang27/{{ ENVIRONMENT_NAME }}:{{ CIRCLE_WORKFLOW_ID }}"
       args:
         chdir: $HOME
 

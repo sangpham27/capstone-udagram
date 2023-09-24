@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: capstone-project-deployment
   labels:
-    app: capstone-project-app
+    app: capstone-udagram-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: capstone-project-app
+      app: capstone-udagram-app
   template:
     metadata:
       labels:
-        app: capstone-project-app
+        app: capstone-udagram-app
     spec:
       containers:
-        - name: capstone-project-app
-          image: emb1605272/api
+        - name: capstone-udagram-app
+          image: sang27/capstone-udagram
           ports:
             - containerPort: 80
