@@ -126,8 +126,6 @@ jobs:
           paths:
             - inventory.txt
             - checkIfDeployed.txt
-      
-      - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -200,8 +198,6 @@ jobs:
           root: ~/
           paths:
             - elb_dns.txt
-      
-      - destroy-environment
 
   deploy-docker:
     docker:
@@ -221,8 +217,6 @@ jobs:
             cd ansible
             ansible-playbook -i ~/inventory.txt deploy-app.yml -vvv
           no_output_timeout: 2m
-      
-      - destroy-environment
 
 workflows:
   default: 
