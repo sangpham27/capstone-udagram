@@ -1,5 +1,5 @@
 [
   "EnvironmentName=capstone-project",
-  "SSHKeyName=keyp5",
+  "SSHKeyName=udagram",
   "amiImageId= ami-068663a3c619dd892"
 ]
