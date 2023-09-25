@@ -5,10 +5,16 @@ metadata:
   labels:
     app: capstone-project-app
 spec:
-  replicas: 4
+  replicas: 2
+  progressDeadlineSeconds: 3600
   selector:
     matchLabels:
       app: capstone-project-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -17,5 +23,6 @@ spec:
       containers:
         - name: capstone-project-app
           image: sang27/api
+          imagePullPolicy: Always
           ports:
             - containerPort: 80

@@ -16,3 +16,13 @@
       shell: "./bin/kubectl rollout status deployments/{{ ENVIRONMENT_NAME }}-deployment"
       args:
         chdir: $HOME
+
+    - name: Get deployment
+      shell: "./bin/kubectl get deployments"
+      args:
+        chdir: $HOME
+
+    - name: Get service
+      shell: "./bin/kubectl get services"
+      args:
+        chdir: $HOME
