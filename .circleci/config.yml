@@ -231,18 +231,13 @@ jobs:
       - install_ansible
       - add_ssh_keys:
           fingerprints: 
-            - "a3:57:85:ae:6b:d9:3b:a2:c6:05:e1:ad:51:bb:e6:9b"
+            - "40:22:96:40:8e:e1:f0:4f:24:2f:c5:b1:1f:2c:df:82"
       - attach_workspace:
           at: ~/      
       - run:
           name: Deploy newest Docker Image
           command: |
             cat ~/inventory.txt   
-            cd .ssh
-            eval `ssh-agent`
-            chmod 400 capstone.pem
-            ssh-add capstone.pem 
-            cd ..
             cd ansible
             ansible-playbook -i ~/inventory.txt deploy-app.yml -vvv
           no_output_timeout: 2m
