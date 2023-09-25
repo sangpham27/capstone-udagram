@@ -238,6 +238,11 @@ jobs:
           name: Deploy newest Docker Image
           command: |
             cat ~/inventory.txt   
+            cd .ssh
+            eval `ssh-agent`
+            chmod 400 udagram.pem
+            ssh-add udagram.pem 
+            cd ..
             cd ansible
             ansible-playbook -i ~/inventory.txt deploy-app.yml -vvv
           no_output_timeout: 2m
