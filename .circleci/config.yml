@@ -245,7 +245,12 @@ jobs:
             cd ..
             cd ansible
             ansible-playbook -i ~/inventory.txt deploy-app.yml -vvv
-          no_output_timeout: 2m
+          no_output_timeout: 10m
+      - run:
+          name: Run tests
+          command: |
+            sleep 360
+            kubectl get all
 
 workflows:
   default: 
