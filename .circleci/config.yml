@@ -249,17 +249,17 @@ workflows:
   default:
     jobs:
       - build
-      - upload-docker:
-          requires:
-            - build
-      - deploy-infrastructure
-      - configure-infrastructure:
-          requires:
-            - deploy-infrastructure
-      - configure-cluster:
-          requires:
-            - configure-infrastructure
-            - upload-docker
-      - deploy-docker:
-          requires:
-            - configure-cluster
+      # - upload-docker:
+      #     requires:
+      #       - build
+      # - deploy-infrastructure
+      # - configure-infrastructure:
+      #     requires:
+      #       - deploy-infrastructure
+      # - configure-cluster:
+      #     requires:
+      #       - configure-infrastructure
+      #       - upload-docker
+      # - deploy-docker:
+      #     requires:
+      #       - configure-cluster
