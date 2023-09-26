@@ -2,21 +2,21 @@ version: 2.1
 
 commands:
   destroy-environment:
-    description: Destroy stasks when fail
+    description: Destroy stacks when fail
     parameters:
       ENVIRONMENT_NAME:
         type: string
-        default: ${ENVIRONMENT_NAME} 
+        default: ${ENVIRONMENT_NAME}
     steps:
       - run:
-          name: Destroy stask
+          name: Destroy stacks
           when: on_fail
-          command: |                                              
+          command: |
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-network" 
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-cluster"
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup"
             aws cloudformation delete-stack --stack-name "${ENVIRONMENT_NAME}-eks-toggle" 
-  
+
   install_ansible:
     description: Install Ansible
     steps:
@@ -48,14 +48,14 @@ jobs:
             # Install hadolint
             wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
                 chmod +x /bin/hadolint
-      
+
       # run lint
       - run:
           name: run lint
           command: |
             . venv/bin/activate
             make lint      
-      
+
       - save_cache:
           paths:
             - ./venv
@@ -72,19 +72,20 @@ jobs:
       - run:
           name: Build docker container
           command: |
-            echo "image name: -> " $DOCKER_IMAGE_NAME .
+            echo "image name: -> " capstone .
             echo "CIRCLE_WORKFLOW_ID: -> " $CIRCLE_WORKFLOW_ID        
-            docker build --tag=$DOCKER_IMAGE_NAME .
+            docker build --tag=capstone .
             echo "Build completed"
             docker image ls
       - run:
           name: Upload Docker to Dockerhub
           command: |
-            echo "Docker ID and Image: $DOCKER_IMAGE_NAME"
-            docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
-            docker tag $DOCKER_IMAGE_NAME $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
-            docker push $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
-  
+            echo "Docker ID and Image: capstone"
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker tag capstone $DOCKERHUB_USERNAME/uda-capstone:capstone
+            docker push $DOCKERHUB_USERNAME/uda-capstone:capstone
+
+
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -92,7 +93,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: yum install -y tar gzip            
+          command: yum install -y tar gzip
       - run:
           name: Ensure EKS network exists
           command: |
@@ -102,6 +103,7 @@ jobs:
               --stack-name "${ENVIRONMENT_NAME}-eks-network" \
               --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/network-parameter.json
+
       - run:
           name: Ensure EKS Cluster exists
           command: |
@@ -125,7 +127,7 @@ jobs:
               --capabilities CAPABILITY_NAMED_IAM
       - run:
           name: Ensure toggle instances exists
-          command: |              
+          command: |
             aws cloudformation deploy \
               --template-file cloudformation/toggle.yml \
               --tags project=${ENVIRONMENT_NAME}-project \
@@ -144,7 +146,7 @@ jobs:
               --filters "Name=tag:Name,Values=capstone-project-toggle*" \
               --output text >> ~/inventory.txt
             cat ~/inventory.txt
-      
+
       - persist_to_workspace:
           root: ~/
           paths:
@@ -155,37 +157,38 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - checkout     
+      - checkout
       - install_ansible
       - add_ssh_keys:
           fingerprints:
-            - "48:4f:3e:61:65:78:6d:67:cb:16:0e:38:ad:a9:ab:37:0d:98:c1:c2"
+            - "9f:05:69:38:c0:d5:bb:a5:64:9d:00:24:43:1f:38:7b:5c:52:f1:12"
       - attach_workspace:
-          at: ~/    
+          at: ~/
       - run:
           name: Configure server
           command: |
-             if grep -q "No changes to deploy" ~/checkIfDeployed.txt
-                then
-                  cat ~/inventory.txt
-                  echo "Our management instances are already configured."
-                else
-                  cat ~/inventory.txt                                                                        
-                  cd ansible                  
-                  ansible-playbook -i ~/inventory.txt configure-server.yml
-                fi
- 
+            if grep -q "No changes to deploy" ~/checkIfDeployed.txt
+               then
+                 cat ~/inventory.txt
+                 echo "Our management instances are already configured."
+               else
+                 cat ~/inventory.txt                                                                        
+                 cd ansible                  
+                 ansible-playbook -i ~/inventory.txt configure-server.yml
+               fi
+
+
   configure-cluster:
     docker:
       - image: cimg/base:stable
     steps:
-      - checkout     
-      - install_ansible 
+      - checkout
+      - install_ansible
       - add_ssh_keys:
           fingerprints:
-            - "48:4f:3e:61:65:78:6d:67:cb:16:0e:38:ad:a9:ab:37:0d:98:c1:c2"
+            - "9f:05:69:38:c0:d5:bb:a5:64:9d:00:24:43:1f:38:7b:5c:52:f1:12"
       - attach_workspace:
-          at: ~/                      
+          at: ~/
       - run:
           name: Configure cluster server
           command: |
@@ -208,7 +211,7 @@ jobs:
                 cat ~/inventory.txt
                 echo "Wait 60 seconds..."
                 sleep 60
-              fi     
+              fi
       - run:
           name: Display the LoadBalancer's DNS name
           command: |
@@ -230,10 +233,10 @@ jobs:
       - checkout
       - install_ansible
       - add_ssh_keys:
-          fingerprints: 
-            - "48:4f:3e:61:65:78:6d:67:cb:16:0e:38:ad:a9:ab:37:0d:98:c1:c2"
+          fingerprints:
+            - "9f:05:69:38:c0:d5:bb:a5:64:9d:00:24:43:1f:38:7b:5c:52:f1:12"
       - attach_workspace:
-          at: ~/      
+          at: ~/
       - run:
           name: Deploy newest Docker Image
           command: |
@@ -243,19 +246,13 @@ jobs:
           no_output_timeout: 2m
 
 workflows:
-  default: 
+  default:
     jobs:
       - build
       - upload-docker:
           requires:
             - build
-          filters:
-            branches:
-              only: [ main ]
-      - deploy-infrastructure:
-          filters:
-            branches:
-              only: [ main ]
+      - deploy-infrastructure
       - configure-infrastructure:
           requires:
             - deploy-infrastructure

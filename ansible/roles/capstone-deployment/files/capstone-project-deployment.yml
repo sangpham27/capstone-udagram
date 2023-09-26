@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: capstone-project-app
-          image: emb1605272/api
+          image: sang27/api
           ports:
             - containerPort: 80

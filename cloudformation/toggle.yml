@@ -9,7 +9,7 @@ Parameters:
     Type: String
   SSHKeyName:
     Description: SSH key for toggle access
-    Default: keyp5
+    Default: udagram
     Type: String
   amiImageId:
     Description: Defines the Image-ID of the OS to deploy
