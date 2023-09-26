@@ -3,7 +3,7 @@
 This project represents the successful completion of the last final Capstone project and the Cloud DevOps Engineer Nanodegree at Udacity.
 - Github: https://github.com/sangpham27/capstone-udagram
 - Docker: https://hub.docker.com/repository/docker/sang27/uda-capstone/general
-- CircleCI: [![CircleCI](https://app.circleci.com/pipelines/github/sangpham27/capstone-udagram)
+- CircleCI: [![CircleCI](https://dl.circleci.com/status-badge/img/gh/sangpham27/capstone-udagram/tree/dev.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/sangpham27/capstone-udagram/tree/dev)
 ## What did I learn?
 
 In this project, I applied the skills and knowledge I developed throughout the Cloud DevOps Nanodegree program. These include:
