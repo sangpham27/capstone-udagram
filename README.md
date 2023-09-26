@@ -47,6 +47,8 @@ I used CircleCi to create a CI/CD Pipeline to test and deploy changes manually b
 Linting is used to check if the Application and Dockerfile is syntactically correct.
 This process makes sure that the code quality is always as good as possible.
 
+#### This is the output when the step fail:
+![Linting step fail](./lint_fail.png)
 #### This is the output when the step passes:
 
 ![Linting step pass](./lint.png)
@@ -58,6 +60,9 @@ This process makes sure that the code quality is always as good as possible.
 ## Access the Application
 
 After the EKS-Cluster has been successfully configured using Ansible within the CI/CD Pipeline, I checked the deployment and service log on pipeline as follows:
+
+![Get task deployment](./deployment.png)
+![Get task deployment](./service.png)
 
 ```
     ##TASK [Get deployment] **********************************************************
