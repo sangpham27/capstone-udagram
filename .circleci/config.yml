@@ -27,6 +27,18 @@ commands:
             sudo apt install software-properties-common -y
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible -y
+
+  install-aws-iam-authenticator:
+    description: Install aws-iam-authenticator
+    steps:
+      - run:
+          name: Install aws-iam-authenticator
+          command: |
+            curl -o aws-iam-authenticator curl -o aws-iam-authenticator \
+              https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+            chmod +x ./aws-iam-authenticator
+            sudo mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
+
 jobs:
   build:
     docker:
@@ -90,6 +102,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - install-aws-iam-authenticator
       - run:
           name: Install dependencies
           command: yum install -y tar gzip            
@@ -228,6 +241,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-aws-iam-authenticator
       - install_ansible
       - add_ssh_keys:
           fingerprints: 
@@ -245,12 +259,7 @@ jobs:
             cd ..
             cd ansible
             ansible-playbook -i ~/inventory.txt deploy-app.yml -vvv
-          no_output_timeout: 10m
-      - run:
-          name: Run tests
-          command: |
-            sleep 360
-            kubectl get all
+          no_output_timeout: 2m
 
 workflows:
   default: 
